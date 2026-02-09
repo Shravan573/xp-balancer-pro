@@ -1,0 +1,2068 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>XP Progression Balancer Pro</title>
+    <style>
+        :root {
+            --primary: #000000;
+            --secondary: #333333;
+            --accent: #666666;
+            --success: #4ade80;
+            --warning: #fbbf24;
+            --danger: #f87171;
+            --dark: #111111;
+            --light: #f5f5f5;
+        }
+
+        [data-theme="dark"] {
+            --bg-primary: #0a0a0a;
+            --bg-secondary: #1a1a1a;
+            --bg-tertiary: #2a2a2a;
+            --text-primary: #f5f5f5;
+            --text-secondary: #a3a3a3;
+            --border: #333333;
+        }
+
+        [data-theme="light"] {
+            --bg-primary: #ffffff;
+            --bg-secondary: #f5f5f5;
+            --bg-tertiary: #e5e5e5;
+            --text-primary: #000000;
+            --text-secondary: #666666;
+            --border: #d4d4d4;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: var(--bg-secondary);
+            padding: 20px;
+            min-height: 100vh;
+            color: var(--text-primary);
+            transition: all 0.3s;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            background: var(--bg-primary);
+            border-radius: 0;
+            padding: 40px;
+            border: 1px solid var(--border);
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid var(--border);
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .header-left h1 {
+            color: var(--text-primary);
+            font-size: 2em;
+            margin-bottom: 5px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        .header-left .subtitle {
+            color: var(--text-secondary);
+            font-size: 0.95em;
+            font-weight: 400;
+        }
+
+        .header-right {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 10px 18px;
+            border: 1px solid var(--border);
+            border-radius: 0;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 500;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn:hover {
+            background: var(--bg-tertiary);
+            border-color: var(--text-primary);
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .btn-primary:hover {
+            background: var(--secondary);
+            border-color: var(--secondary);
+        }
+
+        .btn-icon {
+            padding: 10px;
+            aspect-ratio: 1;
+        }
+
+        .controls {
+            background: var(--bg-secondary);
+            padding: 30px;
+            margin-bottom: 30px;
+            border: 1px solid var(--border);
+        }
+        
+        .controls h2 {
+            color: var(--text-primary);
+            margin-bottom: 25px;
+            font-size: 1.2em;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .input-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .input-item label {
+            display: block;
+            font-weight: 500;
+            margin-bottom: 8px;
+            color: var(--text-primary);
+            font-size: 0.85em;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .input-item input, .input-item select, .input-item textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--border);
+            border-radius: 0;
+            font-size: 14px;
+            transition: all 0.2s;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            font-family: inherit;
+        }
+        
+        .input-item input:focus, .input-item select:focus, .input-item textarea:focus {
+            outline: none;
+            border-color: var(--text-primary);
+            background: var(--bg-tertiary);
+        }
+
+        .curve-params {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border);
+        }
+
+        .formula-editor {
+            margin-top: 20px;
+            padding: 20px;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border);
+        }
+
+        .formula-editor textarea {
+            font-family: 'Courier New', monospace;
+            min-height: 100px;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 0;
+            margin-bottom: 30px;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .tab {
+            padding: 12px 24px;
+            background: transparent;
+            border: none;
+            border-bottom: 2px solid transparent;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 500;
+            transition: all 0.2s;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .tab:hover {
+            color: var(--text-primary);
+            border-bottom-color: var(--border);
+        }
+        
+        .tab.active {
+            color: var(--text-primary);
+            border-bottom-color: var(--text-primary);
+            font-weight: 600;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1px;
+            margin-bottom: 40px;
+            background: var(--border);
+            border: 1px solid var(--border);
+        }
+        
+        .stat-card {
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            padding: 30px;
+        }
+        
+        .stat-card h3 {
+            font-size: 0.75em;
+            opacity: 0.6;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 500;
+        }
+        
+        .stat-card .value {
+            font-size: 2.5em;
+            font-weight: 700;
+            letter-spacing: -1px;
+        }
+
+        .stat-card.warning .value {
+            color: var(--warning);
+        }
+
+        .stat-card.success .value {
+            color: var(--success);
+        }
+
+        .stat-card.danger .value {
+            color: var(--danger);
+        }
+        
+        .table-container {
+            overflow-x: auto;
+            border: 1px solid var(--border);
+            max-height: 600px;
+            overflow-y: auto;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: var(--bg-primary);
+        }
+        
+        th {
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            padding: 16px;
+            text-align: left;
+            font-weight: 600;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            border-bottom: 2px solid var(--border);
+            font-size: 0.75em;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        td {
+            padding: 14px 16px;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+            color: var(--text-primary);
+            font-size: 0.9em;
+        }
+        
+        tr:hover {
+            background: var(--bg-secondary);
+        }
+        
+        .level-col {
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+        
+        .milestone {
+            background: var(--bg-tertiary) !important;
+            font-weight: 600;
+        }
+
+        .grind-wall {
+            background: rgba(248, 113, 113, 0.1) !important;
+            border-left: 3px solid var(--danger);
+        }
+
+        .sweet-spot {
+            background: rgba(74, 222, 128, 0.1) !important;
+            border-left: 3px solid var(--success);
+        }
+        
+        .chart-container {
+            margin: 30px 0;
+            padding: 30px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+        }
+        
+        canvas {
+            max-width: 100%;
+        }
+
+        .benchmark-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1px;
+            background: var(--border);
+            border: 1px solid var(--border);
+        }
+
+        .benchmark-card {
+            padding: 25px;
+            background: var(--bg-primary);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .benchmark-card:hover {
+            background: var(--bg-secondary);
+        }
+
+        .benchmark-card h3 {
+            color: var(--text-primary);
+            margin-bottom: 8px;
+            font-weight: 600;
+            font-size: 1.1em;
+        }
+
+        .benchmark-card .genre {
+            display: inline-block;
+            padding: 4px 10px;
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+            border: 1px solid var(--border);
+            font-size: 0.7em;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 500;
+        }
+
+        .benchmark-card .stats {
+            font-size: 0.85em;
+            color: var(--text-secondary);
+            line-height: 1.8;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.85);
+            z-index: 1000;
+            padding: 20px;
+        }
+
+        .modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: var(--bg-primary);
+            padding: 40px;
+            border: 1px solid var(--border);
+            max-width: 600px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .modal-header h2 {
+            color: var(--text-primary);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 28px;
+            cursor: pointer;
+            color: var(--text-secondary);
+            line-height: 1;
+        }
+
+        .close-btn:hover {
+            color: var(--text-primary);
+        }
+
+        .alert {
+            padding: 16px 20px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border: 1px solid var(--border);
+            background: var(--bg-secondary);
+        }
+
+        .alert-warning {
+            border-left: 3px solid var(--warning);
+        }
+
+        .alert-danger {
+            border-left: 3px solid var(--danger);
+        }
+
+        .alert-success {
+            border-left: 3px solid var(--success);
+        }
+
+        .alert-info {
+            border-left: 3px solid var(--text-primary);
+        }
+
+        .percentile-chart {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1px;
+            margin: 20px 0;
+            background: var(--border);
+            border: 1px solid var(--border);
+        }
+
+        .percentile-item {
+            padding: 25px;
+            background: var(--bg-primary);
+            text-align: center;
+        }
+
+        .percentile-item .label {
+            font-size: 0.75em;
+            color: var(--text-secondary);
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .percentile-item .value {
+            font-size: 2.5em;
+            font-weight: 700;
+            color: var(--text-primary);
+            letter-spacing: -1px;
+        }
+
+        .preset-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1px;
+            max-height: 300px;
+            overflow-y: auto;
+            background: var(--border);
+            border: 1px solid var(--border);
+        }
+
+        .preset-item {
+            padding: 20px;
+            background: var(--bg-primary);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .preset-item:hover {
+            background: var(--bg-secondary);
+        }
+
+        .preset-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        @media print {
+            body {
+                background: white;
+            }
+            .header-right, .tabs, .controls {
+                display: none;
+            }
+            .container {
+                border: none;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+
+            .header-left h1 {
+                font-size: 1.5em;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .input-group {
+                grid-template-columns: 1fr;
+            }
+
+            .tabs {
+                overflow-x: auto;
+                flex-wrap: nowrap;
+            }
+        }
+
+        .copy-btn {
+            padding: 6px 10px;
+            font-size: 11px;
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+            border: 1px solid var(--border);
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .copy-btn:hover {
+            background: var(--bg-secondary);
+            border-color: var(--text-primary);
+        }
+
+        .history-controls {
+            display: flex;
+            gap: 8px;
+        }
+
+        .linkedin-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 10px 18px;
+            background: #0077b5;
+            color: white;
+            text-decoration: none;
+            border: 1px solid #0077b5;
+            font-size: 13px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transition: all 0.2s;
+        }
+
+        .linkedin-btn:hover {
+            background: #006396;
+            border-color: #006396;
+        }
+
+        .linkedin-btn svg {
+            width: 16px;
+            height: 16px;
+            fill: currentColor;
+        }
+
+        code {
+            background: var(--bg-tertiary);
+            padding: 2px 6px;
+            border: 1px solid var(--border);
+            font-family: 'Courier New', monospace;
+            font-size: 0.85em;
+        }
+
+        strong {
+            font-weight: 600;
+        }
+
+        ul {
+            margin: 10px 0;
+            padding-left: 20px;
+        }
+
+        li {
+            margin: 5px 0;
+        }
+    </style>
+</head>
+<body data-theme="light">
+    <div class="container">
+        <div class="header">
+            <div class="header-left">
+                <h1>XP BALANCER PRO</h1>
+                <p class="subtitle">Professional game progression design tool</p>
+            </div>
+            <div class="header-right">
+                <a href="https://www.linkedin.com/in/shravankumarks/" target="_blank" class="linkedin-btn" rel="noopener noreferrer">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path d="M20.5 2h-17A1.5 1.5 0 002 3.5v17A1.5 1.5 0 003.5 22h17a1.5 1.5 0 001.5-1.5v-17A1.5 1.5 0 0020.5 2zM8 19H5v-9h3zM6.5 8.25A1.75 1.75 0 118.3 6.5a1.78 1.78 0 01-1.8 1.75zM19 19h-3v-4.74c0-1.42-.6-1.93-1.38-1.93A1.74 1.74 0 0013 14.19a.66.66 0 000 .14V19h-3v-9h2.9v1.3a3.11 3.11 0 012.7-1.4c1.55 0 3.36.86 3.36 3.66z"></path>
+                    </svg>
+                    LinkedIn
+                </a>
+                <div class="history-controls">
+                    <button class="btn btn-icon" onclick="undo()" title="Undo">↶</button>
+                    <button class="btn btn-icon" onclick="redo()" title="Redo">↷</button>
+                </div>
+                <button class="btn" onclick="openModal('import')">Import</button>
+                <button class="btn" onclick="openModal('export')">Export</button>
+                <button class="btn" onclick="openModal('presets')">Presets</button>
+                <button class="btn btn-icon" onclick="toggleTheme()" id="themeToggle">◐</button>
+                <button class="btn" onclick="window.print()">Print</button>
+            </div>
+        </div>
+
+        <div id="alerts"></div>
+        
+        <div class="controls">
+            <h2>Settings</h2>
+            <div class="input-group">
+                <div class="input-item">
+                    <label for="xpPerMatch">XP Per Match</label>
+                    <input type="number" id="xpPerMatch" value="5" min="1">
+                </div>
+                <div class="input-item">
+                    <label for="matchesPerDay">Matches Per Day</label>
+                    <input type="number" id="matchesPerDay" value="3" min="1">
+                </div>
+                <div class="input-item">
+                    <label for="maxLevel">Max Level</label>
+                    <input type="number" id="maxLevel" value="50" min="1" max="100">
+                </div>
+                <div class="input-item">
+                    <label for="curveType">Progression Curve</label>
+                    <select id="curveType">
+                        <option value="current">Current (Your Data)</option>
+                        <option value="exponential">Exponential</option>
+                        <option value="linear">Linear</option>
+                        <option value="steepEarly">Steep Early</option>
+                        <option value="smooth">Smooth</option>
+                        <option value="custom">Custom Formula</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="curve-params" id="curveParams"></div>
+            
+            <div id="formulaEditor" class="formula-editor" style="display: none;">
+                <label><strong>Custom Formula (JavaScript):</strong></label>
+                <p style="margin: 10px 0; font-size: 0.9em; color: var(--text-secondary);">
+                    Use 'level' as the variable. Example: <code>Math.pow(level, 2) * 100</code>
+                </p>
+                <textarea id="customFormula" placeholder="level * 1000 + Math.pow(level, 1.5) * 200">level * 1000 + Math.pow(level, 1.5) * 200</textarea>
+                <button class="btn btn-primary" onclick="applyCustomFormula()" style="margin-top: 15px;">Apply Formula</button>
+            </div>
+        </div>
+        
+        <div class="stats-grid" id="statsGrid">
+            <div class="stat-card">
+                <h3>Total XP to Max</h3>
+                <div class="value" id="totalXP">643,875</div>
+            </div>
+            <div class="stat-card">
+                <h3>Total Matches</h3>
+                <div class="value" id="totalMatches">128,775</div>
+            </div>
+            <div class="stat-card">
+                <h3>Days to Max</h3>
+                <div class="value" id="daysToMax">42,925</div>
+            </div>
+            <div class="stat-card">
+                <h3>Weeks to Max</h3>
+                <div class="value" id="weeksToMax">6,132</div>
+            </div>
+        </div>
+        
+        <div class="tabs">
+            <button class="tab active" onclick="switchTab('progression')">Progression</button>
+            <button class="tab" onclick="switchTab('charts')">Charts</button>
+            <button class="tab" onclick="switchTab('comparison')">Comparison</button>
+            <button class="tab" onclick="switchTab('analysis')">Analysis</button>
+            <button class="tab" onclick="switchTab('benchmarks')">Benchmarks</button>
+        </div>
+        
+        <div id="progression" class="tab-content active">
+            <div class="table-container">
+                <table id="progressionTable">
+                    <thead>
+                        <tr>
+                            <th>Level</th>
+                            <th>Min XP</th>
+                            <th>Max XP</th>
+                            <th>XP Range</th>
+                            <th>Total XP</th>
+                            <th>Matches</th>
+                            <th>Days</th>
+                            <th>Status</th>
+                            <th>Copy</th>
+                        </tr>
+                    </thead>
+                    <tbody id="progressionBody"></tbody>
+                </table>
+            </div>
+        </div>
+        
+        <div id="charts" class="tab-content">
+            <div class="chart-container">
+                <canvas id="mainChart"></canvas>
+            </div>
+            <div class="chart-container">
+                <canvas id="comparisonChart"></canvas>
+            </div>
+        </div>
+        
+        <div id="comparison" class="tab-content">
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Level</th>
+                            <th>Current</th>
+                            <th>Exponential</th>
+                            <th>Linear</th>
+                            <th>Steep Early</th>
+                            <th>Smooth</th>
+                        </tr>
+                    </thead>
+                    <tbody id="comparisonBody"></tbody>
+                </table>
+            </div>
+        </div>
+        
+        <div id="analysis" class="tab-content">
+            <h2 style="margin-bottom: 25px; color: var(--text-primary); font-size: 1.2em; text-transform: uppercase; letter-spacing: 1px;">Progression Analysis</h2>
+            
+            <div id="grindWallAlerts"></div>
+            
+            <h3 style="margin: 40px 0 20px; color: var(--text-primary); font-size: 1em; text-transform: uppercase; letter-spacing: 0.5px;">Player Distribution (30 Days)</h3>
+            <div class="percentile-chart" id="percentileChart"></div>
+            
+            <h3 style="margin: 40px 0 20px; color: var(--text-primary); font-size: 1em; text-transform: uppercase; letter-spacing: 0.5px;">Progression Velocity</h3>
+            <div class="chart-container">
+                <canvas id="velocityChart"></canvas>
+            </div>
+        </div>
+
+        <div id="benchmarks" class="tab-content">
+            <h2 style="margin-bottom: 25px; color: var(--text-primary); font-size: 1.2em; text-transform: uppercase; letter-spacing: 1px;">Industry Benchmarks</h2>
+            <p style="margin-bottom: 25px; color: var(--text-secondary);">Click on any benchmark to load its progression curve</p>
+            <div class="benchmark-grid" id="benchmarkGrid"></div>
+        </div>
+    </div>
+
+    <div style="text-align: center; padding: 20px; color: var(--text-secondary); font-size: 0.85em; margin-top: 20px;">
+        Created by <a href="https://www.linkedin.com/in/shravankumarks/" target="_blank" rel="noopener noreferrer" style="color: #0077b5; text-decoration: none; font-weight: 600;">Shravan Kumar KS</a>
+    </div>
+
+    <!-- Modals -->
+    <div id="importModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Import Data</h2>
+                <button class="close-btn" onclick="closeModal('import')">&times;</button>
+            </div>
+            <div class="input-item">
+                <label>Paste CSV or JSON</label>
+                <textarea id="importData" rows="10" placeholder="Level,MinXP,MaxXP,XPRange,TotalXP&#10;1,0,15,15,15&#10;2,16,76,60,75&#10;...&#10;&#10;OR&#10;&#10;[{level:1,minXP:0,maxXP:15,...}]"></textarea>
+            </div>
+            <button class="btn btn-primary" onclick="importData()" style="margin-top: 20px;">Import</button>
+        </div>
+    </div>
+
+    <div id="exportModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Export Data</h2>
+                <button class="close-btn" onclick="closeModal('export')">&times;</button>
+            </div>
+            <div class="input-item">
+                <label>Format</label>
+                <select id="exportFormat">
+                    <option value="csv">CSV</option>
+                    <option value="json">JSON</option>
+                    <option value="url">Share URL</option>
+                </select>
+            </div>
+            <div class="input-item" style="margin-top: 20px;">
+                <label>Output</label>
+                <textarea id="exportData" rows="10" readonly></textarea>
+            </div>
+            <div style="display: flex; gap: 10px; margin-top: 20px;">
+                <button class="btn btn-primary" onclick="generateExport()">Generate</button>
+                <button class="btn" onclick="copyExport()">Copy</button>
+                <button class="btn" onclick="downloadExport()">Download</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="presetsModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Curve Presets</h2>
+                <button class="close-btn" onclick="closeModal('presets')">&times;</button>
+            </div>
+            <div class="input-item">
+                <label>Save Current Curve</label>
+                <input type="text" id="presetName" placeholder="My Custom Curve">
+            </div>
+            <button class="btn btn-primary" onclick="savePreset()" style="margin-top: 15px;">Save Preset</button>
+            
+            <h3 style="margin: 30px 0 15px; text-transform: uppercase; letter-spacing: 0.5px; font-size: 0.9em;">Saved Presets</h3>
+            <div class="preset-list" id="presetList"></div>
+        </div>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // === DATA & STATE ===
+        const currentData = [
+            [1, 0, 15, 15, 15],
+            [2, 16, 76, 60, 75],
+            [3, 77, 212, 135, 210],
+            [4, 213, 453, 240, 450],
+            [5, 454, 829, 375, 825],
+            [6, 830, 1370, 540, 1365],
+            [7, 1371, 2106, 735, 2100],
+            [8, 2107, 3067, 960, 3060],
+            [9, 3068, 4283, 1215, 4275],
+            [10, 4284, 5784, 1500, 5775],
+            [11, 5785, 7600, 1815, 7590],
+            [12, 7601, 9761, 2160, 9750],
+            [13, 9762, 12297, 2535, 12285],
+            [14, 12298, 15238, 2940, 15225],
+            [15, 15239, 18614, 3375, 18600],
+            [16, 18615, 22455, 3840, 22440],
+            [17, 22456, 26791, 4335, 26775],
+            [18, 26792, 31652, 4860, 31635],
+            [19, 31653, 37068, 5415, 37050],
+            [20, 37069, 43069, 6000, 43050],
+            [21, 43070, 49685, 6615, 49665],
+            [22, 49686, 56946, 7260, 56925],
+            [23, 56947, 64882, 7935, 64860],
+            [24, 64883, 73523, 8640, 73500],
+            [25, 73524, 82899, 9375, 82875],
+            [26, 82900, 93040, 10140, 93015],
+            [27, 93041, 103976, 10935, 103950],
+            [28, 103977, 115737, 11760, 115710],
+            [29, 115738, 128353, 12615, 128325],
+            [30, 128354, 141854, 13500, 141825],
+            [31, 141855, 156270, 14415, 156240],
+            [32, 156271, 171631, 15360, 171600],
+            [33, 171632, 187967, 16335, 187935],
+            [34, 187968, 205308, 17340, 205275],
+            [35, 205309, 223684, 18375, 223650],
+            [36, 223685, 243125, 19440, 243090],
+            [37, 243126, 263661, 20535, 263625],
+            [38, 263662, 285322, 21660, 285285],
+            [39, 285323, 308138, 22815, 308100],
+            [40, 308139, 332139, 24000, 332100],
+            [41, 332140, 357355, 25215, 357315],
+            [42, 357356, 383816, 26460, 383775],
+            [43, 383817, 411552, 27735, 411510],
+            [44, 411553, 440593, 29040, 440550],
+            [45, 440594, 470969, 30375, 470925],
+            [46, 470970, 502710, 31740, 502665],
+            [47, 502711, 535846, 33135, 535800],
+            [48, 535847, 570407, 34560, 570360],
+            [49, 570408, 606423, 36015, 606375],
+            [50, 606424, 643924, 37500, 643875]
+        ];
+        
+        let curveParams = {
+            exponential: { multiplier: 1.15 },
+            linear: { increase: 1000 },
+            steepEarly: { base: 500, exponent: 1.5 },
+            smooth: { base: 200, factor: 150 },
+            custom: { formula: 'level * 1000 + Math.pow(level, 1.5) * 200' }
+        };
+
+        let charts = {};
+        let history = [];
+        let historyIndex = -1;
+        let maxHistory = 50;
+
+        // Industry benchmarks
+        const benchmarks = [
+            {
+                name: 'Fortnite Battle Pass',
+                genre: 'Battle Royale',
+                levels: 100,
+                timeToMax: 75,
+                description: 'Season-based progression',
+                curve: 'exponential',
+                params: { multiplier: 1.08 }
+            },
+            {
+                name: 'Apex Legends',
+                genre: 'Battle Royale',
+                levels: 500,
+                timeToMax: 180,
+                description: 'Long-term progression',
+                curve: 'steepEarly',
+                params: { base: 300, exponent: 1.4 }
+            },
+            {
+                name: 'Call of Duty',
+                genre: 'FPS',
+                levels: 55,
+                timeToMax: 30,
+                description: 'Fast seasonal progression',
+                curve: 'linear',
+                params: { increase: 800 }
+            },
+            {
+                name: 'League of Legends',
+                genre: 'MOBA',
+                levels: 30,
+                timeToMax: 45,
+                description: 'Account leveling',
+                curve: 'smooth',
+                params: { base: 500, factor: 200 }
+            },
+            {
+                name: 'Valorant',
+                genre: 'Tactical FPS',
+                levels: 50,
+                timeToMax: 60,
+                description: 'Battle pass system',
+                curve: 'exponential',
+                params: { multiplier: 1.12 }
+            },
+            {
+                name: 'Mobile RPG Standard',
+                genre: 'Mobile RPG',
+                levels: 100,
+                timeToMax: 90,
+                description: 'Retention-focused',
+                curve: 'steepEarly',
+                params: { base: 400, exponent: 1.6 }
+            }
+        ];
+
+        // === CURVE GENERATORS ===
+        function generateExponential(level, maxLevel, params = curveParams.exponential) {
+            const multiplier = params.multiplier;
+            const data = [];
+            let totalXP = 0;
+            
+            for (let i = 1; i <= maxLevel; i++) {
+                const minXP = totalXP;
+                const xpRange = Math.round(100 * Math.pow(multiplier, i - 1));
+                const maxXP = minXP + xpRange;
+                totalXP = maxXP;
+                data.push([i, minXP, maxXP, xpRange, totalXP]);
+            }
+            return data;
+        }
+        
+        function generateLinear(level, maxLevel, params = curveParams.linear) {
+            const increase = params.increase;
+            const data = [];
+            let totalXP = 0;
+            
+            for (let i = 1; i <= maxLevel; i++) {
+                const minXP = totalXP;
+                const xpRange = increase;
+                const maxXP = minXP + xpRange;
+                totalXP = maxXP;
+                data.push([i, minXP, maxXP, xpRange, totalXP]);
+            }
+            return data;
+        }
+        
+        function generateSteepEarly(level, maxLevel, params = curveParams.steepEarly) {
+            const base = params.base;
+            const exponent = params.exponent;
+            const data = [];
+            let totalXP = 0;
+            
+            for (let i = 1; i <= maxLevel; i++) {
+                const minXP = totalXP;
+                const xpRange = Math.round(base * Math.pow(i, exponent));
+                const maxXP = minXP + xpRange;
+                totalXP = maxXP;
+                data.push([i, minXP, maxXP, xpRange, totalXP]);
+            }
+            return data;
+        }
+        
+        function generateSmooth(level, maxLevel, params = curveParams.smooth) {
+            const base = params.base;
+            const factor = params.factor;
+            const data = [];
+            let totalXP = 0;
+            
+            for (let i = 1; i <= maxLevel; i++) {
+                const minXP = totalXP;
+                const xpRange = Math.round(base + factor * i);
+                const maxXP = minXP + xpRange;
+                totalXP = maxXP;
+                data.push([i, minXP, maxXP, xpRange, totalXP]);
+            }
+            return data;
+        }
+
+        function generateCustom(level, maxLevel, formula) {
+            const data = [];
+            let totalXP = 0;
+            
+            try {
+                for (let i = 1; i <= maxLevel; i++) {
+                    const minXP = totalXP;
+                    const xpRange = Math.round(eval(formula.replace(/level/g, i)));
+                    const maxXP = minXP + xpRange;
+                    totalXP = maxXP;
+                    data.push([i, minXP, maxXP, xpRange, totalXP]);
+                }
+            } catch (e) {
+                showAlert('Invalid formula: ' + e.message, 'danger');
+                return currentData;
+            }
+            return data;
+        }
+        
+        function getData() {
+            const curveType = document.getElementById('curveType').value;
+            const maxLevel = parseInt(document.getElementById('maxLevel').value);
+            
+            let data;
+            switch(curveType) {
+                case 'exponential':
+                    data = generateExponential(1, maxLevel);
+                    break;
+                case 'linear':
+                    data = generateLinear(1, maxLevel);
+                    break;
+                case 'steepEarly':
+                    data = generateSteepEarly(1, maxLevel);
+                    break;
+                case 'smooth':
+                    data = generateSmooth(1, maxLevel);
+                    break;
+                case 'custom':
+                    data = generateCustom(1, maxLevel, curveParams.custom.formula);
+                    break;
+                default:
+                    data = currentData.slice(0, maxLevel);
+            }
+            return data;
+        }
+
+        // === UI FUNCTIONS ===
+        function toggleTheme() {
+            const body = document.body;
+            const currentTheme = body.getAttribute('data-theme');
+            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+            body.setAttribute('data-theme', newTheme);
+            document.getElementById('themeToggle').textContent = newTheme === 'light' ? '◐' : '◑';
+            
+            // Recreate charts with new theme
+            updateCharts();
+        }
+
+        function updateCurveParams() {
+            const curveType = document.getElementById('curveType').value;
+            const container = document.getElementById('curveParams');
+            const formulaEditor = document.getElementById('formulaEditor');
+            
+            container.innerHTML = '';
+            formulaEditor.style.display = 'none';
+            
+            switch(curveType) {
+                case 'exponential':
+                    container.innerHTML = `
+                        <div class="input-item">
+                            <label>Multiplier</label>
+                            <input type="number" id="expMultiplier" value="${curveParams.exponential.multiplier}" step="0.01" min="1">
+                        </div>
+                    `;
+                    break;
+                case 'linear':
+                    container.innerHTML = `
+                        <div class="input-item">
+                            <label>XP Increase</label>
+                            <input type="number" id="linearIncrease" value="${curveParams.linear.increase}" step="100">
+                        </div>
+                    `;
+                    break;
+                case 'steepEarly':
+                    container.innerHTML = `
+                        <div class="input-item">
+                            <label>Base XP</label>
+                            <input type="number" id="steepBase" value="${curveParams.steepEarly.base}" step="50">
+                        </div>
+                        <div class="input-item">
+                            <label>Exponent</label>
+                            <input type="number" id="steepExponent" value="${curveParams.steepEarly.exponent}" step="0.1" min="1">
+                        </div>
+                    `;
+                    break;
+                case 'smooth':
+                    container.innerHTML = `
+                        <div class="input-item">
+                            <label>Base XP</label>
+                            <input type="number" id="smoothBase" value="${curveParams.smooth.base}" step="50">
+                        </div>
+                        <div class="input-item">
+                            <label>Level Factor</label>
+                            <input type="number" id="smoothFactor" value="${curveParams.smooth.factor}" step="10">
+                        </div>
+                    `;
+                    break;
+                case 'custom':
+                    formulaEditor.style.display = 'block';
+                    document.getElementById('customFormula').value = curveParams.custom.formula;
+                    break;
+            }
+            
+            container.querySelectorAll('input').forEach(input => {
+                input.addEventListener('input', updateFromParams);
+            });
+        }
+        
+        function updateFromParams() {
+            const curveType = document.getElementById('curveType').value;
+            
+            saveState();
+            
+            switch(curveType) {
+                case 'exponential':
+                    curveParams.exponential.multiplier = parseFloat(document.getElementById('expMultiplier').value);
+                    break;
+                case 'linear':
+                    curveParams.linear.increase = parseInt(document.getElementById('linearIncrease').value);
+                    break;
+                case 'steepEarly':
+                    curveParams.steepEarly.base = parseInt(document.getElementById('steepBase').value);
+                    curveParams.steepEarly.exponent = parseFloat(document.getElementById('steepExponent').value);
+                    break;
+                case 'smooth':
+                    curveParams.smooth.base = parseInt(document.getElementById('smoothBase').value);
+                    curveParams.smooth.factor = parseInt(document.getElementById('smoothFactor').value);
+                    break;
+            }
+            
+            updateAll();
+        }
+
+        function applyCustomFormula() {
+            const formula = document.getElementById('customFormula').value;
+            saveState();
+            curveParams.custom.formula = formula;
+            updateAll();
+        }
+
+        function formatNumber(num) {
+            return num.toLocaleString();
+        }
+
+        function showAlert(message, type = 'info') {
+            const alertsDiv = document.getElementById('alerts');
+            const alert = document.createElement('div');
+            alert.className = `alert alert-${type}`;
+            alert.innerHTML = `<span>${message}</span>`;
+            alertsDiv.appendChild(alert);
+            
+            setTimeout(() => alert.remove(), 5000);
+        }
+
+        // === GRIND WALL DETECTION ===
+        function detectGrindWalls() {
+            const data = getData();
+            const xpPerMatch = parseInt(document.getElementById('xpPerMatch').value);
+            const matchesPerDay = parseInt(document.getElementById('matchesPerDay').value);
+            
+            const grindWalls = [];
+            const sweetSpots = [];
+            
+            for (let i = 1; i < data.length; i++) {
+                const prevXPRange = data[i-1][3];
+                const currXPRange = data[i][3];
+                const increase = ((currXPRange - prevXPRange) / prevXPRange) * 100;
+                
+                const daysForLevel = Math.ceil((currXPRange / xpPerMatch) / matchesPerDay);
+                
+                if (increase > 50 || daysForLevel > 3) {
+                    grindWalls.push({
+                        level: data[i][0],
+                        increase: increase.toFixed(1),
+                        daysForLevel: daysForLevel,
+                        severity: increase > 100 ? 'high' : 'medium'
+                    });
+                } else if (daysForLevel < 1 && i > 5) {
+                    sweetSpots.push({
+                        level: data[i][0],
+                        daysForLevel: daysForLevel
+                    });
+                }
+            }
+            
+            return { grindWalls, sweetSpots };
+        }
+
+        function displayGrindWallAnalysis() {
+            const { grindWalls, sweetSpots } = detectGrindWalls();
+            const container = document.getElementById('grindWallAlerts');
+            container.innerHTML = '';
+            
+            if (grindWalls.length > 0) {
+                const alert = document.createElement('div');
+                alert.className = 'alert alert-warning';
+                alert.innerHTML = `
+                    <div>
+                        <strong>Grind Walls Detected</strong>
+                        <ul style="margin: 10px 0 0 20px;">
+                            ${grindWalls.slice(0, 5).map(w => 
+                                `<li>Level ${w.level}: ${w.increase}% XP increase (${w.daysForLevel} days/level)</li>`
+                            ).join('')}
+                        </ul>
+                    </div>
+                `;
+                container.appendChild(alert);
+            }
+            
+            if (sweetSpots.length > 0 && grindWalls.length === 0) {
+                const alert = document.createElement('div');
+                alert.className = 'alert alert-success';
+                alert.innerHTML = `<strong>Well-balanced progression curve!</strong> No significant grind walls detected.`;
+                container.appendChild(alert);
+            }
+        }
+
+        // === PERCENTILE DISTRIBUTION ===
+        function calculatePercentiles() {
+            const data = getData();
+            const xpPerMatch = parseInt(document.getElementById('xpPerMatch').value);
+            const matchesPerDay = parseInt(document.getElementById('matchesPerDay').value);
+            const days = 30;
+            const totalXPIn30Days = xpPerMatch * matchesPerDay * days;
+            
+            let p25Level = 1, p50Level = 1, p75Level = 1, p90Level = 1;
+            
+            const p25XP = totalXPIn30Days * 0.5;
+            const p50XP = totalXPIn30Days * 0.75;
+            const p75XP = totalXPIn30Days * 1.0;
+            const p90XP = totalXPIn30Days * 1.25;
+            
+            for (let i = 0; i < data.length; i++) {
+                if (data[i][4] <= p25XP) p25Level = data[i][0];
+                if (data[i][4] <= p50XP) p50Level = data[i][0];
+                if (data[i][4] <= p75XP) p75Level = data[i][0];
+                if (data[i][4] <= p90XP) p90Level = data[i][0];
+            }
+            
+            return { p25: p25Level, p50: p50Level, p75: p75Level, p90: p90Level };
+        }
+
+        function displayPercentiles() {
+            const percentiles = calculatePercentiles();
+            const container = document.getElementById('percentileChart');
+            
+            container.innerHTML = `
+                <div class="percentile-item">
+                    <div class="label">25th Percentile</div>
+                    <div class="value">Lvl ${percentiles.p25}</div>
+                </div>
+                <div class="percentile-item">
+                    <div class="label">50th Percentile</div>
+                    <div class="value">Lvl ${percentiles.p50}</div>
+                </div>
+                <div class="percentile-item">
+                    <div class="label">75th Percentile</div>
+                    <div class="value">Lvl ${percentiles.p75}</div>
+                </div>
+                <div class="percentile-item">
+                    <div class="label">90th Percentile</div>
+                    <div class="value">Lvl ${percentiles.p90}</div>
+                </div>
+            `;
+        }
+
+        // === CHARTS ===
+        function updateCharts() {
+            updateMainChart();
+            updateComparisonChart();
+            updateVelocityChart();
+        }
+
+        function updateMainChart() {
+            const data = getData();
+            const ctx = document.getElementById('mainChart').getContext('2d');
+            
+            if (charts.main) charts.main.destroy();
+            
+            const theme = document.body.getAttribute('data-theme');
+            const gridColor = theme === 'dark' ? '#333333' : '#e5e5e5';
+            const textColor = theme === 'dark' ? '#f5f5f5' : '#000000';
+            
+            charts.main = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: data.map(row => `${row[0]}`),
+                    datasets: [{
+                        label: 'Total XP',
+                        data: data.map(row => row[4]),
+                        borderColor: '#000000',
+                        backgroundColor: 'rgba(0, 0, 0, 0.05)',
+                        tension: 0.4,
+                        fill: true,
+                        yAxisID: 'y',
+                        borderWidth: 2
+                    }, {
+                        label: 'XP per Level',
+                        data: data.map(row => row[3]),
+                        borderColor: '#666666',
+                        backgroundColor: 'rgba(102, 102, 102, 0.05)',
+                        tension: 0.4,
+                        fill: true,
+                        yAxisID: 'y1',
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    plugins: {
+                        legend: {
+                            display: true,
+                            position: 'top',
+                            labels: { 
+                                color: textColor,
+                                font: { size: 11, weight: '500' },
+                                usePointStyle: true
+                            }
+                        },
+                        title: {
+                            display: true,
+                            text: 'XP PROGRESSION CURVE',
+                            font: { size: 14, weight: '600' },
+                            color: textColor
+                        }
+                    },
+                    scales: {
+                        x: {
+                            grid: { color: gridColor },
+                            ticks: { color: textColor, font: { size: 10 } }
+                        },
+                        y: {
+                            type: 'linear',
+                            display: true,
+                            position: 'left',
+                            beginAtZero: true,
+                            grid: { color: gridColor },
+                            ticks: { 
+                                color: textColor,
+                                font: { size: 10 },
+                                callback: function(value) {
+                                    return formatNumber(value);
+                                }
+                            },
+                            title: {
+                                display: true,
+                                text: 'Total XP',
+                                color: textColor,
+                                font: { size: 11, weight: '600' }
+                            }
+                        },
+                        y1: {
+                            type: 'linear',
+                            display: true,
+                            position: 'right',
+                            beginAtZero: true,
+                            grid: { drawOnChartArea: false },
+                            ticks: { 
+                                color: textColor,
+                                font: { size: 10 },
+                                callback: function(value) {
+                                    return formatNumber(value);
+                                }
+                            },
+                            title: {
+                                display: true,
+                                text: 'XP per Level',
+                                color: textColor,
+                                font: { size: 11, weight: '600' }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function updateComparisonChart() {
+            const maxLevel = parseInt(document.getElementById('maxLevel').value);
+            const ctx = document.getElementById('comparisonChart').getContext('2d');
+            
+            if (charts.comparison) charts.comparison.destroy();
+            
+            const current = currentData.slice(0, maxLevel);
+            const exponential = generateExponential(1, maxLevel);
+            const linear = generateLinear(1, maxLevel);
+            const steepEarly = generateSteepEarly(1, maxLevel);
+            const smooth = generateSmooth(1, maxLevel);
+            
+            const theme = document.body.getAttribute('data-theme');
+            const gridColor = theme === 'dark' ? '#333333' : '#e5e5e5';
+            const textColor = theme === 'dark' ? '#f5f5f5' : '#000000';
+            
+            charts.comparison = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: current.map((_, i) => `${i + 1}`),
+                    datasets: [{
+                        label: 'Current',
+                        data: current.map(row => row[4]),
+                        borderColor: '#000000',
+                        backgroundColor: 'transparent',
+                        tension: 0.4,
+                        borderWidth: 2
+                    }, {
+                        label: 'Exponential',
+                        data: exponential.map(row => row[4]),
+                        borderColor: '#333333',
+                        backgroundColor: 'transparent',
+                        tension: 0.4,
+                        borderWidth: 2
+                    }, {
+                        label: 'Linear',
+                        data: linear.map(row => row[4]),
+                        borderColor: '#666666',
+                        backgroundColor: 'transparent',
+                        tension: 0.4,
+                        borderWidth: 2
+                    }, {
+                        label: 'Steep Early',
+                        data: steepEarly.map(row => row[4]),
+                        borderColor: '#999999',
+                        backgroundColor: 'transparent',
+                        tension: 0.4,
+                        borderWidth: 2
+                    }, {
+                        label: 'Smooth',
+                        data: smooth.map(row => row[4]),
+                        borderColor: '#cccccc',
+                        backgroundColor: 'transparent',
+                        tension: 0.4,
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    plugins: {
+                        legend: {
+                            display: true,
+                            position: 'top',
+                            labels: { 
+                                color: textColor,
+                                font: { size: 11, weight: '500' },
+                                usePointStyle: true
+                            }
+                        },
+                        title: {
+                            display: true,
+                            text: 'ALL CURVES COMPARISON',
+                            font: { size: 14, weight: '600' },
+                            color: textColor
+                        }
+                    },
+                    scales: {
+                        x: {
+                            grid: { color: gridColor },
+                            ticks: { color: textColor, font: { size: 10 } }
+                        },
+                        y: {
+                            beginAtZero: true,
+                            grid: { color: gridColor },
+                            ticks: { 
+                                color: textColor,
+                                font: { size: 10 },
+                                callback: function(value) {
+                                    return formatNumber(value);
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function updateVelocityChart() {
+            const data = getData();
+            const ctx = document.getElementById('velocityChart').getContext('2d');
+            
+            if (charts.velocity) charts.velocity.destroy();
+            
+            const velocities = data.map((row, i) => {
+                if (i === 0) return 0;
+                return row[3] - data[i-1][3];
+            });
+            
+            const theme = document.body.getAttribute('data-theme');
+            const gridColor = theme === 'dark' ? '#333333' : '#e5e5e5';
+            const textColor = theme === 'dark' ? '#f5f5f5' : '#000000';
+            
+            charts.velocity = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: data.map(row => `${row[0]}`),
+                    datasets: [{
+                        label: 'XP Increase Rate',
+                        data: velocities,
+                        backgroundColor: velocities.map(v => {
+                            if (v > 500) return theme === 'dark' ? '#f87171' : '#ef4444';
+                            if (v < 100) return theme === 'dark' ? '#4ade80' : '#22c55e';
+                            return theme === 'dark' ? '#666666' : '#999999';
+                        }),
+                        borderColor: 'transparent'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: { display: false },
+                        title: {
+                            display: true,
+                            text: 'LEVEL-TO-LEVEL XP INCREASE',
+                            font: { size: 14, weight: '600' },
+                            color: textColor
+                        }
+                    },
+                    scales: {
+                        x: {
+                            grid: { color: gridColor },
+                            ticks: { color: textColor, font: { size: 10 } }
+                        },
+                        y: {
+                            beginAtZero: true,
+                            grid: { color: gridColor },
+                            ticks: { color: textColor, font: { size: 10 } }
+                        }
+                    }
+                }
+            });
+        }
+
+        // === TABLES ===
+        function updateStats() {
+            const data = getData();
+            const xpPerMatch = parseInt(document.getElementById('xpPerMatch').value);
+            const matchesPerDay = parseInt(document.getElementById('matchesPerDay').value);
+            
+            const totalXP = data[data.length - 1][4];
+            const totalMatches = Math.ceil(totalXP / xpPerMatch);
+            const daysToMax = Math.ceil(totalMatches / matchesPerDay);
+            const weeksToMax = (daysToMax / 7).toFixed(1);
+            
+            document.getElementById('totalXP').textContent = formatNumber(totalXP);
+            document.getElementById('totalMatches').textContent = formatNumber(totalMatches);
+            document.getElementById('daysToMax').textContent = formatNumber(daysToMax);
+            document.getElementById('weeksToMax').textContent = weeksToMax;
+        }
+
+        function updateProgressionTable() {
+            const data = getData();
+            const xpPerMatch = parseInt(document.getElementById('xpPerMatch').value);
+            const matchesPerDay = parseInt(document.getElementById('matchesPerDay').value);
+            const tbody = document.getElementById('progressionBody');
+            
+            const { grindWalls, sweetSpots } = detectGrindWalls();
+            const grindWallLevels = new Set(grindWalls.map(w => w.level));
+            const sweetSpotLevels = new Set(sweetSpots.map(s => s.level));
+            
+            tbody.innerHTML = '';
+            
+            data.forEach(row => {
+                const [level, minXP, maxXP, xpRange, totalXP] = row;
+                const matches = Math.ceil(totalXP / xpPerMatch);
+                const days = Math.ceil(matches / matchesPerDay);
+                
+                const tr = document.createElement('tr');
+                const isMilestone = level % 10 === 0;
+                const isGrindWall = grindWallLevels.has(level);
+                const isSweetSpot = sweetSpotLevels.has(level);
+                
+                if (isMilestone) tr.classList.add('milestone');
+                if (isGrindWall) tr.classList.add('grind-wall');
+                if (isSweetSpot) tr.classList.add('sweet-spot');
+                
+                let status = '—';
+                if (isMilestone) status = '◆';
+                if (isGrindWall) status = '⚠';
+                if (isSweetSpot) status = '✓';
+                
+                tr.innerHTML = `
+                    <td class="level-col">${level}</td>
+                    <td>${formatNumber(minXP)}</td>
+                    <td>${formatNumber(maxXP)}</td>
+                    <td>${formatNumber(xpRange)}</td>
+                    <td>${formatNumber(totalXP)}</td>
+                    <td>${formatNumber(matches)}</td>
+                    <td>${formatNumber(days)}</td>
+                    <td>${status}</td>
+                    <td><button class="copy-btn" onclick="copyRow(${level})">Copy</button></td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function copyRow(level) {
+            const data = getData();
+            const row = data[level - 1];
+            const text = `Level ${row[0]}: ${formatNumber(row[4])} total XP (${formatNumber(row[3])} XP this level)`;
+            navigator.clipboard.writeText(text);
+            showAlert('Copied to clipboard', 'success');
+        }
+
+        function updateComparison() {
+            const maxLevel = parseInt(document.getElementById('maxLevel').value);
+            const tbody = document.getElementById('comparisonBody');
+            
+            const current = currentData.slice(0, maxLevel);
+            const exponential = generateExponential(1, maxLevel);
+            const linear = generateLinear(1, maxLevel);
+            const steepEarly = generateSteepEarly(1, maxLevel);
+            const smooth = generateSmooth(1, maxLevel);
+            
+            tbody.innerHTML = '';
+            
+            for (let i = 0; i < maxLevel; i++) {
+                const tr = document.createElement('tr');
+                const isMilestone = (i + 1) % 10 === 0;
+                if (isMilestone) tr.classList.add('milestone');
+                
+                tr.innerHTML = `
+                    <td class="level-col">${i + 1}</td>
+                    <td>${formatNumber(current[i] ? current[i][4] : 0)}</td>
+                    <td>${formatNumber(exponential[i][4])}</td>
+                    <td>${formatNumber(linear[i][4])}</td>
+                    <td>${formatNumber(steepEarly[i][4])}</td>
+                    <td>${formatNumber(smooth[i][4])}</td>
+                `;
+                tbody.appendChild(tr);
+            }
+        }
+
+        // === BENCHMARKS ===
+        function displayBenchmarks() {
+            const grid = document.getElementById('benchmarkGrid');
+            grid.innerHTML = '';
+            
+            benchmarks.forEach(benchmark => {
+                const card = document.createElement('div');
+                card.className = 'benchmark-card';
+                card.onclick = () => loadBenchmark(benchmark);
+                
+                card.innerHTML = `
+                    <span class="genre">${benchmark.genre}</span>
+                    <h3>${benchmark.name}</h3>
+                    <p style="color: var(--text-secondary); margin: 10px 0;">${benchmark.description}</p>
+                    <div class="stats">
+                        <div>${benchmark.levels} levels</div>
+                        <div>~${benchmark.timeToMax} days to max</div>
+                        <div>${benchmark.curve} curve</div>
+                    </div>
+                `;
+                
+                grid.appendChild(card);
+            });
+        }
+
+        function loadBenchmark(benchmark) {
+            saveState();
+            
+            document.getElementById('curveType').value = benchmark.curve;
+            document.getElementById('maxLevel').value = benchmark.levels;
+            
+            curveParams[benchmark.curve] = { ...benchmark.params };
+            
+            updateCurveParams();
+            updateAll();
+            
+            showAlert(`Loaded: ${benchmark.name}`, 'success');
+        }
+
+        // === IMPORT/EXPORT ===
+        function openModal(type) {
+            document.getElementById(`${type}Modal`).classList.add('active');
+        }
+
+        function closeModal(type) {
+            document.getElementById(`${type}Modal`).classList.remove('active');
+        }
+
+        function importData() {
+            const input = document.getElementById('importData').value.trim();
+            
+            try {
+                let newData;
+                
+                if (input.startsWith('[')) {
+                    newData = JSON.parse(input);
+                } else {
+                    const lines = input.split('\n').filter(l => l.trim());
+                    newData = lines.slice(1).map(line => {
+                        const parts = line.split(',').map(p => parseInt(p.trim()));
+                        return parts;
+                    });
+                }
+                
+                if (newData.length > 0 && newData[0].length === 5) {
+                    currentData.length = 0;
+                    currentData.push(...newData);
+                    
+                    document.getElementById('curveType').value = 'current';
+                    document.getElementById('maxLevel').value = newData.length;
+                    
+                    updateAll();
+                    closeModal('import');
+                    showAlert('Data imported successfully', 'success');
+                } else {
+                    throw new Error('Invalid data format');
+                }
+            } catch (e) {
+                showAlert('Import failed: ' + e.message, 'danger');
+            }
+        }
+
+        function generateExport() {
+            const format = document.getElementById('exportFormat').value;
+            const data = getData();
+            const output = document.getElementById('exportData');
+            
+            if (format === 'csv') {
+                let csv = 'Level,MinXP,MaxXP,XPRange,TotalXP\n';
+                csv += data.map(row => row.join(',')).join('\n');
+                output.value = csv;
+            } else if (format === 'json') {
+                const json = data.map(row => ({
+                    level: row[0],
+                    minXP: row[1],
+                    maxXP: row[2],
+                    xpRange: row[3],
+                    totalXP: row[4]
+                }));
+                output.value = JSON.stringify(json, null, 2);
+            } else if (format === 'url') {
+                const state = {
+                    curve: document.getElementById('curveType').value,
+                    params: curveParams[document.getElementById('curveType').value],
+                    xpPerMatch: document.getElementById('xpPerMatch').value,
+                    matchesPerDay: document.getElementById('matchesPerDay').value,
+                    maxLevel: document.getElementById('maxLevel').value
+                };
+                const encoded = btoa(JSON.stringify(state));
+                output.value = `${window.location.origin}${window.location.pathname}?curve=${encoded}`;
+            }
+        }
+
+        function copyExport() {
+            const output = document.getElementById('exportData');
+            output.select();
+            navigator.clipboard.writeText(output.value);
+            showAlert('Copied to clipboard', 'success');
+        }
+
+        function downloadExport() {
+            const format = document.getElementById('exportFormat').value;
+            const output = document.getElementById('exportData').value;
+            
+            if (format === 'url') {
+                showAlert('Use "Copy" to share the URL', 'info');
+                return;
+            }
+            
+            const blob = new Blob([output], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `xp_curve.${format}`;
+            a.click();
+            URL.revokeObjectURL(url);
+            
+            showAlert('Download started', 'success');
+        }
+
+        // === PRESETS ===
+        function savePreset() {
+            const name = document.getElementById('presetName').value.trim();
+            
+            if (!name) {
+                showAlert('Please enter a preset name', 'warning');
+                return;
+            }
+            
+            const preset = {
+                name,
+                curve: document.getElementById('curveType').value,
+                params: curveParams[document.getElementById('curveType').value],
+                xpPerMatch: document.getElementById('xpPerMatch').value,
+                matchesPerDay: document.getElementById('matchesPerDay').value,
+                maxLevel: document.getElementById('maxLevel').value,
+                timestamp: Date.now()
+            };
+            
+            const presets = JSON.parse(localStorage.getItem('xpBalancerPresets') || '[]');
+            presets.push(preset);
+            localStorage.setItem('xpBalancerPresets', JSON.stringify(presets));
+            
+            document.getElementById('presetName').value = '';
+            loadPresets();
+            showAlert('Preset saved', 'success');
+        }
+
+        function loadPresets() {
+            const presets = JSON.parse(localStorage.getItem('xpBalancerPresets') || '[]');
+            const list = document.getElementById('presetList');
+            
+            if (presets.length === 0) {
+                list.innerHTML = '<p style="text-align: center; color: var(--text-secondary); padding: 20px;">No saved presets</p>';
+                return;
+            }
+            
+            list.innerHTML = '';
+            presets.forEach((preset, index) => {
+                const item = document.createElement('div');
+                item.className = 'preset-item';
+                item.innerHTML = `
+                    <div>
+                        <strong>${preset.name}</strong>
+                        <div style="font-size: 0.85em; color: var(--text-secondary);">
+                            ${preset.curve} • Level ${preset.maxLevel}
+                        </div>
+                    </div>
+                    <div class="preset-actions">
+                        <button class="btn btn-primary" onclick="applyPreset(${index})">Load</button>
+                        <button class="btn" onclick="deletePreset(${index})">Delete</button>
+                    </div>
+                `;
+                list.appendChild(item);
+            });
+        }
+
+        function applyPreset(index) {
+            const presets = JSON.parse(localStorage.getItem('xpBalancerPresets') || '[]');
+            const preset = presets[index];
+            
+            if (!preset) return;
+            
+            saveState();
+            
+            document.getElementById('curveType').value = preset.curve;
+            document.getElementById('xpPerMatch').value = preset.xpPerMatch;
+            document.getElementById('matchesPerDay').value = preset.matchesPerDay;
+            document.getElementById('maxLevel').value = preset.maxLevel;
+            
+            curveParams[preset.curve] = { ...preset.params };
+            
+            updateCurveParams();
+            updateAll();
+            closeModal('presets');
+            
+            showAlert(`Loaded preset: ${preset.name}`, 'success');
+        }
+
+        function deletePreset(index) {
+            const presets = JSON.parse(localStorage.getItem('xpBalancerPresets') || '[]');
+            presets.splice(index, 1);
+            localStorage.setItem('xpBalancerPresets', JSON.stringify(presets));
+            loadPresets();
+            showAlert('Preset deleted', 'info');
+        }
+
+        // === HISTORY (UNDO/REDO) ===
+        function saveState() {
+            const state = {
+                curve: document.getElementById('curveType').value,
+                params: JSON.parse(JSON.stringify(curveParams)),
+                xpPerMatch: document.getElementById('xpPerMatch').value,
+                matchesPerDay: document.getElementById('matchesPerDay').value,
+                maxLevel: document.getElementById('maxLevel').value
+            };
+            
+            history.splice(historyIndex + 1);
+            
+            history.push(state);
+            if (history.length > maxHistory) {
+                history.shift();
+            } else {
+                historyIndex++;
+            }
+        }
+
+        function undo() {
+            if (historyIndex > 0) {
+                historyIndex--;
+                restoreState(history[historyIndex]);
+                showAlert('Undo', 'info');
+            }
+        }
+
+        function redo() {
+            if (historyIndex < history.length - 1) {
+                historyIndex++;
+                restoreState(history[historyIndex]);
+                showAlert('Redo', 'info');
+            }
+        }
+
+        function restoreState(state) {
+            document.getElementById('curveType').value = state.curve;
+            document.getElementById('xpPerMatch').value = state.xpPerMatch;
+            document.getElementById('matchesPerDay').value = state.matchesPerDay;
+            document.getElementById('maxLevel').value = state.maxLevel;
+            
+            curveParams = JSON.parse(JSON.stringify(state.params));
+            
+            updateCurveParams();
+            updateAll();
+        }
+
+        // === TAB SWITCHING ===
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+            
+            if (tabName === 'charts') {
+                updateCharts();
+            } else if (tabName === 'analysis') {
+                displayGrindWallAnalysis();
+                displayPercentiles();
+                updateVelocityChart();
+            } else if (tabName === 'benchmarks') {
+                displayBenchmarks();
+            }
+        }
+
+        // === MASTER UPDATE ===
+        function updateAll() {
+            updateStats();
+            updateProgressionTable();
+            updateComparison();
+            
+            const activeTab = document.querySelector('.tab-content.active');
+            if (activeTab && (activeTab.id === 'charts' || activeTab.id === 'analysis')) {
+                updateCharts();
+            }
+        }
+
+        // === EVENT LISTENERS ===
+        document.getElementById('xpPerMatch').addEventListener('input', () => {
+            saveState();
+            updateAll();
+        });
+        document.getElementById('matchesPerDay').addEventListener('input', () => {
+            saveState();
+            updateAll();
+        });
+        document.getElementById('maxLevel').addEventListener('input', () => {
+            saveState();
+            updateAll();
+        });
+        document.getElementById('curveType').addEventListener('change', () => {
+            saveState();
+            updateCurveParams();
+            updateAll();
+        });
+
+        window.onclick = function(event) {
+            if (event.target.classList.contains('modal')) {
+                event.target.classList.remove('active');
+            }
+        };
+
+        window.addEventListener('load', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const curveData = urlParams.get('curve');
+            
+            if (curveData) {
+                try {
+                    const state = JSON.parse(atob(curveData));
+                    document.getElementById('curveType').value = state.curve;
+                    document.getElementById('xpPerMatch').value = state.xpPerMatch;
+                    document.getElementById('matchesPerDay').value = state.matchesPerDay;
+                    document.getElementById('maxLevel').value = state.maxLevel;
+                    curveParams[state.curve] = state.params;
+                    
+                    updateCurveParams();
+                    updateAll();
+                    showAlert('Loaded shared curve', 'success');
+                } catch (e) {
+                    console.error('Failed to load shared curve:', e);
+                }
+            }
+        });
+
+        // === INITIALIZATION ===
+        saveState();
+        updateCurveParams();
+        updateAll();
+        displayBenchmarks();
+        loadPresets();
+    </script>
+</body>
+</html>
