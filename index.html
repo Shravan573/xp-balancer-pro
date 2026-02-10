@@ -332,15 +332,6 @@
             font-weight: 600;
         }
 
-        .grind-wall {
-            background: rgba(248, 113, 113, 0.1) !important;
-            border-left: 3px solid var(--danger);
-        }
-
-        .sweet-spot {
-            background: rgba(74, 222, 128, 0.1) !important;
-            border-left: 3px solid var(--success);
-        }
         
         .chart-container {
             margin: 30px 0;
@@ -481,35 +472,6 @@
             border-left: 3px solid var(--text-primary);
         }
 
-        .percentile-chart {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1px;
-            margin: 20px 0;
-            background: var(--border);
-            border: 1px solid var(--border);
-        }
-
-        .percentile-item {
-            padding: 25px;
-            background: var(--bg-primary);
-            text-align: center;
-        }
-
-        .percentile-item .label {
-            font-size: 0.75em;
-            color: var(--text-secondary);
-            margin-bottom: 10px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .percentile-item .value {
-            font-size: 2.5em;
-            font-weight: 700;
-            color: var(--text-primary);
-            letter-spacing: -1px;
-        }
 
         .preset-list {
             display: flex;
@@ -734,8 +696,8 @@
             <button class="tab active" onclick="switchTab('progression')">Progression</button>
             <button class="tab" onclick="switchTab('charts')">Charts</button>
             <button class="tab" onclick="switchTab('comparison')">Comparison</button>
-            <button class="tab" onclick="switchTab('analysis')">Analysis</button>
             <button class="tab" onclick="switchTab('benchmarks')">Benchmarks</button>
+            <button class="tab" onclick="switchTab('sheets')">Google Sheets</button>
         </div>
         
         <div id="progression" class="tab-content active">
@@ -750,7 +712,6 @@
                             <th>Total XP</th>
                             <th>Matches</th>
                             <th>Days</th>
-                            <th>Status</th>
                             <th>Copy</th>
                         </tr>
                     </thead>
@@ -786,24 +747,74 @@
             </div>
         </div>
         
-        <div id="analysis" class="tab-content">
-            <h2 style="margin-bottom: 25px; color: var(--text-primary); font-size: 1.2em; text-transform: uppercase; letter-spacing: 1px;">Progression Analysis</h2>
-            
-            <div id="grindWallAlerts"></div>
-            
-            <h3 style="margin: 40px 0 20px; color: var(--text-primary); font-size: 1em; text-transform: uppercase; letter-spacing: 0.5px;">Player Distribution (30 Days)</h3>
-            <div class="percentile-chart" id="percentileChart"></div>
-            
-            <h3 style="margin: 40px 0 20px; color: var(--text-primary); font-size: 1em; text-transform: uppercase; letter-spacing: 0.5px;">Progression Velocity</h3>
-            <div class="chart-container">
-                <canvas id="velocityChart"></canvas>
-            </div>
-        </div>
 
         <div id="benchmarks" class="tab-content">
             <h2 style="margin-bottom: 25px; color: var(--text-primary); font-size: 1.2em; text-transform: uppercase; letter-spacing: 1px;">Industry Benchmarks</h2>
             <p style="margin-bottom: 25px; color: var(--text-secondary);">Click on any benchmark to load its progression curve</p>
             <div class="benchmark-grid" id="benchmarkGrid"></div>
+        </div>
+
+        <div id="sheets" class="tab-content">
+            <h2 style="margin-bottom: 25px; color: var(--text-primary); font-size: 1.2em; text-transform: uppercase; letter-spacing: 1px;">Google Sheets Setup</h2>
+            <p style="margin-bottom: 25px; color: var(--text-secondary);">Export your progression data directly into a Google Sheets-ready format, or use the Apps Script to auto-generate your sheet.</p>
+
+            <div class="stats-grid" style="margin-bottom: 30px;">
+                <div class="stat-card">
+                    <h3>Step 1</h3>
+                    <div style="font-size: 1em; font-weight: 500;">Copy Sheet Data</div>
+                    <p style="font-size: 0.85em; color: var(--text-secondary); margin-top: 8px;">Copy tab-separated data and paste into Google Sheets cell A1</p>
+                </div>
+                <div class="stat-card">
+                    <h3>Step 2</h3>
+                    <div style="font-size: 1em; font-weight: 500;">Or Use Apps Script</div>
+                    <p style="font-size: 0.85em; color: var(--text-secondary); margin-top: 8px;">Paste the script in Extensions > Apps Script to auto-populate</p>
+                </div>
+                <div class="stat-card">
+                    <h3>Step 3</h3>
+                    <div style="font-size: 1em; font-weight: 500;">Customize & Share</div>
+                    <p style="font-size: 0.85em; color: var(--text-secondary); margin-top: 8px;">Add conditional formatting, charts, and share with your team</p>
+                </div>
+            </div>
+
+            <div style="display: flex; gap: 10px; margin-bottom: 25px; flex-wrap: wrap;">
+                <button class="btn btn-primary" onclick="generateSheetData()">Generate Sheet Data</button>
+                <button class="btn" onclick="copySheetData()">Copy to Clipboard</button>
+                <button class="btn" onclick="generateAppsScript()">Generate Apps Script</button>
+                <button class="btn" onclick="copyAppsScript()">Copy Script</button>
+            </div>
+
+            <h3 style="margin-bottom: 15px; color: var(--text-primary); font-size: 1em; text-transform: uppercase; letter-spacing: 0.5px;">Sheet Preview</h3>
+            <div class="table-container" style="margin-bottom: 30px;">
+                <table id="sheetsPreviewTable">
+                    <thead>
+                        <tr>
+                            <th>Level</th>
+                            <th>Min XP</th>
+                            <th>Max XP</th>
+                            <th>XP Range</th>
+                            <th>Total XP</th>
+                            <th>Matches Needed</th>
+                            <th>Days Needed</th>
+                            <th>Cumulative Days</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="sheetsPreviewBody"></tbody>
+                </table>
+            </div>
+
+            <h3 style="margin-bottom: 15px; color: var(--text-primary); font-size: 1em; text-transform: uppercase; letter-spacing: 0.5px;">Tab-Separated Data (Paste into Google Sheets)</h3>
+            <div class="input-item" style="margin-bottom: 30px;">
+                <textarea id="sheetsTSV" rows="12" readonly style="font-family: 'Courier New', monospace; font-size: 12px;"></textarea>
+            </div>
+
+            <h3 style="margin-bottom: 15px; color: var(--text-primary); font-size: 1em; text-transform: uppercase; letter-spacing: 0.5px;">Google Apps Script (Auto-Generate Sheet)</h3>
+            <p style="margin-bottom: 15px; color: var(--text-secondary); font-size: 0.9em;">
+                Go to your Google Sheet > <strong>Extensions</strong> > <strong>Apps Script</strong> > paste this code > click <strong>Run</strong>.
+            </p>
+            <div class="input-item">
+                <textarea id="sheetsAppsScript" rows="16" readonly style="font-family: 'Courier New', monospace; font-size: 12px;"></textarea>
+            </div>
         </div>
     </div>
 
@@ -1223,123 +1234,11 @@
             setTimeout(() => alert.remove(), 5000);
         }
 
-        // === GRIND WALL DETECTION ===
-        function detectGrindWalls() {
-            const data = getData();
-            const xpPerMatch = parseInt(document.getElementById('xpPerMatch').value);
-            const matchesPerDay = parseInt(document.getElementById('matchesPerDay').value);
-            
-            const grindWalls = [];
-            const sweetSpots = [];
-            
-            for (let i = 1; i < data.length; i++) {
-                const prevXPRange = data[i-1][3];
-                const currXPRange = data[i][3];
-                const increase = ((currXPRange - prevXPRange) / prevXPRange) * 100;
-                
-                const daysForLevel = Math.ceil((currXPRange / xpPerMatch) / matchesPerDay);
-                
-                if (increase > 50 || daysForLevel > 3) {
-                    grindWalls.push({
-                        level: data[i][0],
-                        increase: increase.toFixed(1),
-                        daysForLevel: daysForLevel,
-                        severity: increase > 100 ? 'high' : 'medium'
-                    });
-                } else if (daysForLevel < 1 && i > 5) {
-                    sweetSpots.push({
-                        level: data[i][0],
-                        daysForLevel: daysForLevel
-                    });
-                }
-            }
-            
-            return { grindWalls, sweetSpots };
-        }
-
-        function displayGrindWallAnalysis() {
-            const { grindWalls, sweetSpots } = detectGrindWalls();
-            const container = document.getElementById('grindWallAlerts');
-            container.innerHTML = '';
-            
-            if (grindWalls.length > 0) {
-                const alert = document.createElement('div');
-                alert.className = 'alert alert-warning';
-                alert.innerHTML = `
-                    <div>
-                        <strong>Grind Walls Detected</strong>
-                        <ul style="margin: 10px 0 0 20px;">
-                            ${grindWalls.slice(0, 5).map(w => 
-                                `<li>Level ${w.level}: ${w.increase}% XP increase (${w.daysForLevel} days/level)</li>`
-                            ).join('')}
-                        </ul>
-                    </div>
-                `;
-                container.appendChild(alert);
-            }
-            
-            if (sweetSpots.length > 0 && grindWalls.length === 0) {
-                const alert = document.createElement('div');
-                alert.className = 'alert alert-success';
-                alert.innerHTML = `<strong>Well-balanced progression curve!</strong> No significant grind walls detected.`;
-                container.appendChild(alert);
-            }
-        }
-
-        // === PERCENTILE DISTRIBUTION ===
-        function calculatePercentiles() {
-            const data = getData();
-            const xpPerMatch = parseInt(document.getElementById('xpPerMatch').value);
-            const matchesPerDay = parseInt(document.getElementById('matchesPerDay').value);
-            const days = 30;
-            const totalXPIn30Days = xpPerMatch * matchesPerDay * days;
-            
-            let p25Level = 1, p50Level = 1, p75Level = 1, p90Level = 1;
-            
-            const p25XP = totalXPIn30Days * 0.5;
-            const p50XP = totalXPIn30Days * 0.75;
-            const p75XP = totalXPIn30Days * 1.0;
-            const p90XP = totalXPIn30Days * 1.25;
-            
-            for (let i = 0; i < data.length; i++) {
-                if (data[i][4] <= p25XP) p25Level = data[i][0];
-                if (data[i][4] <= p50XP) p50Level = data[i][0];
-                if (data[i][4] <= p75XP) p75Level = data[i][0];
-                if (data[i][4] <= p90XP) p90Level = data[i][0];
-            }
-            
-            return { p25: p25Level, p50: p50Level, p75: p75Level, p90: p90Level };
-        }
-
-        function displayPercentiles() {
-            const percentiles = calculatePercentiles();
-            const container = document.getElementById('percentileChart');
-            
-            container.innerHTML = `
-                <div class="percentile-item">
-                    <div class="label">25th Percentile</div>
-                    <div class="value">Lvl ${percentiles.p25}</div>
-                </div>
-                <div class="percentile-item">
-                    <div class="label">50th Percentile</div>
-                    <div class="value">Lvl ${percentiles.p50}</div>
-                </div>
-                <div class="percentile-item">
-                    <div class="label">75th Percentile</div>
-                    <div class="value">Lvl ${percentiles.p75}</div>
-                </div>
-                <div class="percentile-item">
-                    <div class="label">90th Percentile</div>
-                    <div class="value">Lvl ${percentiles.p90}</div>
-                </div>
-            `;
-        }
 
         // === CHARTS ===
         function updateCharts() {
             updateMainChart();
             updateComparisonChart();
-            updateVelocityChart();
         }
 
         function updateMainChart() {
@@ -1359,21 +1258,23 @@
                     datasets: [{
                         label: 'Total XP',
                         data: data.map(row => row[4]),
-                        borderColor: '#000000',
-                        backgroundColor: 'rgba(0, 0, 0, 0.05)',
+                        borderColor: '#3b82f6',
+                        backgroundColor: 'rgba(59, 130, 246, 0.1)',
                         tension: 0.4,
                         fill: true,
                         yAxisID: 'y',
-                        borderWidth: 2
+                        borderWidth: 2,
+                        pointBackgroundColor: '#3b82f6'
                     }, {
                         label: 'XP per Level',
                         data: data.map(row => row[3]),
-                        borderColor: '#666666',
-                        backgroundColor: 'rgba(102, 102, 102, 0.05)',
+                        borderColor: '#f97316',
+                        backgroundColor: 'rgba(249, 115, 22, 0.1)',
                         tension: 0.4,
                         fill: true,
                         yAxisID: 'y1',
-                        borderWidth: 2
+                        borderWidth: 2,
+                        pointBackgroundColor: '#f97316'
                     }]
                 },
                 options: {
@@ -1469,38 +1370,43 @@
                     datasets: [{
                         label: 'Current',
                         data: current.map(row => row[4]),
-                        borderColor: '#000000',
+                        borderColor: '#3b82f6',
                         backgroundColor: 'transparent',
                         tension: 0.4,
-                        borderWidth: 2
+                        borderWidth: 2,
+                        pointBackgroundColor: '#3b82f6'
                     }, {
                         label: 'Exponential',
                         data: exponential.map(row => row[4]),
-                        borderColor: '#333333',
+                        borderColor: '#8b5cf6',
                         backgroundColor: 'transparent',
                         tension: 0.4,
-                        borderWidth: 2
+                        borderWidth: 2,
+                        pointBackgroundColor: '#8b5cf6'
                     }, {
                         label: 'Linear',
                         data: linear.map(row => row[4]),
-                        borderColor: '#666666',
+                        borderColor: '#10b981',
                         backgroundColor: 'transparent',
                         tension: 0.4,
-                        borderWidth: 2
+                        borderWidth: 2,
+                        pointBackgroundColor: '#10b981'
                     }, {
                         label: 'Steep Early',
                         data: steepEarly.map(row => row[4]),
-                        borderColor: '#999999',
+                        borderColor: '#f97316',
                         backgroundColor: 'transparent',
                         tension: 0.4,
-                        borderWidth: 2
+                        borderWidth: 2,
+                        pointBackgroundColor: '#f97316'
                     }, {
                         label: 'Smooth',
                         data: smooth.map(row => row[4]),
-                        borderColor: '#cccccc',
+                        borderColor: '#ec4899',
                         backgroundColor: 'transparent',
                         tension: 0.4,
-                        borderWidth: 2
+                        borderWidth: 2,
+                        pointBackgroundColor: '#ec4899'
                     }]
                 },
                 options: {
@@ -1544,61 +1450,6 @@
             });
         }
 
-        function updateVelocityChart() {
-            const data = getData();
-            const ctx = document.getElementById('velocityChart').getContext('2d');
-            
-            if (charts.velocity) charts.velocity.destroy();
-            
-            const velocities = data.map((row, i) => {
-                if (i === 0) return 0;
-                return row[3] - data[i-1][3];
-            });
-            
-            const theme = document.body.getAttribute('data-theme');
-            const gridColor = theme === 'dark' ? '#333333' : '#e5e5e5';
-            const textColor = theme === 'dark' ? '#f5f5f5' : '#000000';
-            
-            charts.velocity = new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: data.map(row => `${row[0]}`),
-                    datasets: [{
-                        label: 'XP Increase Rate',
-                        data: velocities,
-                        backgroundColor: velocities.map(v => {
-                            if (v > 500) return theme === 'dark' ? '#f87171' : '#ef4444';
-                            if (v < 100) return theme === 'dark' ? '#4ade80' : '#22c55e';
-                            return theme === 'dark' ? '#666666' : '#999999';
-                        }),
-                        borderColor: 'transparent'
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    plugins: {
-                        legend: { display: false },
-                        title: {
-                            display: true,
-                            text: 'LEVEL-TO-LEVEL XP INCREASE',
-                            font: { size: 14, weight: '600' },
-                            color: textColor
-                        }
-                    },
-                    scales: {
-                        x: {
-                            grid: { color: gridColor },
-                            ticks: { color: textColor, font: { size: 10 } }
-                        },
-                        y: {
-                            beginAtZero: true,
-                            grid: { color: gridColor },
-                            ticks: { color: textColor, font: { size: 10 } }
-                        }
-                    }
-                }
-            });
-        }
 
         // === TABLES ===
         function updateStats() {
@@ -1622,32 +1473,17 @@
             const xpPerMatch = parseInt(document.getElementById('xpPerMatch').value);
             const matchesPerDay = parseInt(document.getElementById('matchesPerDay').value);
             const tbody = document.getElementById('progressionBody');
-            
-            const { grindWalls, sweetSpots } = detectGrindWalls();
-            const grindWallLevels = new Set(grindWalls.map(w => w.level));
-            const sweetSpotLevels = new Set(sweetSpots.map(s => s.level));
-            
+
             tbody.innerHTML = '';
-            
+
             data.forEach(row => {
                 const [level, minXP, maxXP, xpRange, totalXP] = row;
                 const matches = Math.ceil(totalXP / xpPerMatch);
                 const days = Math.ceil(matches / matchesPerDay);
-                
+
                 const tr = document.createElement('tr');
-                const isMilestone = level % 10 === 0;
-                const isGrindWall = grindWallLevels.has(level);
-                const isSweetSpot = sweetSpotLevels.has(level);
-                
-                if (isMilestone) tr.classList.add('milestone');
-                if (isGrindWall) tr.classList.add('grind-wall');
-                if (isSweetSpot) tr.classList.add('sweet-spot');
-                
-                let status = '—';
-                if (isMilestone) status = '◆';
-                if (isGrindWall) status = '⚠';
-                if (isSweetSpot) status = '✓';
-                
+                if (level % 10 === 0) tr.classList.add('milestone');
+
                 tr.innerHTML = `
                     <td class="level-col">${level}</td>
                     <td>${formatNumber(minXP)}</td>
@@ -1656,7 +1492,6 @@
                     <td>${formatNumber(totalXP)}</td>
                     <td>${formatNumber(matches)}</td>
                     <td>${formatNumber(days)}</td>
-                    <td>${status}</td>
                     <td><button class="copy-btn" onclick="copyRow(${level})">Copy</button></td>
                 `;
                 tbody.appendChild(tr);
@@ -1975,6 +1810,158 @@
             updateAll();
         }
 
+        // === GOOGLE SHEETS ===
+        function generateSheetData() {
+            const data = getData();
+            const xpPerMatch = parseInt(document.getElementById('xpPerMatch').value);
+            const matchesPerDay = parseInt(document.getElementById('matchesPerDay').value);
+
+            // Build preview table
+            const tbody = document.getElementById('sheetsPreviewBody');
+            tbody.innerHTML = '';
+
+            let cumulativeDays = 0;
+            const rows = [];
+
+            data.forEach(row => {
+                const [level, minXP, maxXP, xpRange, totalXP] = row;
+                const matchesForLevel = Math.ceil(xpRange / xpPerMatch);
+                const daysForLevel = Math.ceil(matchesForLevel / matchesPerDay);
+                cumulativeDays += daysForLevel;
+
+                const totalMatches = Math.ceil(totalXP / xpPerMatch);
+                const totalDays = Math.ceil(totalMatches / matchesPerDay);
+
+                const isMilestone = level % 10 === 0;
+
+                const tr = document.createElement('tr');
+                if (isMilestone) tr.classList.add('milestone');
+
+                tr.innerHTML = `
+                    <td class="level-col">${level}</td>
+                    <td>${formatNumber(minXP)}</td>
+                    <td>${formatNumber(maxXP)}</td>
+                    <td>${formatNumber(xpRange)}</td>
+                    <td>${formatNumber(totalXP)}</td>
+                    <td>${formatNumber(matchesForLevel)}</td>
+                    <td>${formatNumber(daysForLevel)}</td>
+                    <td>${formatNumber(cumulativeDays)}</td>
+                    <td>${isMilestone ? 'Milestone' : ''}</td>
+                `;
+                tbody.appendChild(tr);
+
+                rows.push([level, minXP, maxXP, xpRange, totalXP, matchesForLevel, daysForLevel, cumulativeDays, isMilestone ? 'Milestone' : '']);
+            });
+
+            // Build TSV
+            const header = ['Level', 'Min XP', 'Max XP', 'XP Range', 'Total XP', 'Matches Needed', 'Days Needed', 'Cumulative Days', 'Status'];
+            let tsv = header.join('\t') + '\n';
+            tsv += rows.map(r => r.join('\t')).join('\n');
+            document.getElementById('sheetsTSV').value = tsv;
+
+            showAlert('Sheet data generated', 'success');
+        }
+
+        function copySheetData() {
+            const tsv = document.getElementById('sheetsTSV');
+            if (!tsv.value) {
+                generateSheetData();
+            }
+            navigator.clipboard.writeText(tsv.value);
+            showAlert('Sheet data copied — paste into Google Sheets cell A1', 'success');
+        }
+
+        function generateAppsScript() {
+            const data = getData();
+            const xpPerMatch = parseInt(document.getElementById('xpPerMatch').value);
+            const matchesPerDay = parseInt(document.getElementById('matchesPerDay').value);
+            const curveType = document.getElementById('curveType').value;
+
+            let cumulativeDays = 0;
+            const rowsJSON = data.map(row => {
+                const [level, minXP, maxXP, xpRange, totalXP] = row;
+                const matchesForLevel = Math.ceil(xpRange / xpPerMatch);
+                const daysForLevel = Math.ceil(matchesForLevel / matchesPerDay);
+                cumulativeDays += daysForLevel;
+                return `    [${level}, ${minXP}, ${maxXP}, ${xpRange}, ${totalXP}, ${matchesForLevel}, ${daysForLevel}, ${cumulativeDays}]`;
+            }).join(',\n');
+
+            const script = `function createXPProgressionSheet() {
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var sheet = ss.getActiveSheet();
+  sheet.setName("XP Progression - ${curveType}");
+
+  // Headers
+  var headers = [["Level", "Min XP", "Max XP", "XP Range", "Total XP", "Matches Needed", "Days Needed", "Cumulative Days"]];
+  sheet.getRange(1, 1, 1, 8).setValues(headers);
+
+  // Data
+  var data = [
+${rowsJSON}
+  ];
+  sheet.getRange(2, 1, data.length, 8).setValues(data);
+
+  // Formatting
+  sheet.getRange(1, 1, 1, 8).setFontWeight("bold").setBackground("#f0f0f0");
+  sheet.getRange(1, 1, data.length + 1, 8).applyRowBanding(SpreadsheetApp.BandingTheme.LIGHT_GREY);
+  sheet.setFrozenRows(1);
+  sheet.autoResizeColumns(1, 8);
+
+  // Number formatting
+  sheet.getRange(2, 2, data.length, 4).setNumberFormat("#,##0");
+  sheet.getRange(2, 6, data.length, 3).setNumberFormat("#,##0");
+
+  // Milestone highlighting (every 10 levels)
+  for (var i = 0; i < data.length; i++) {
+    if (data[i][0] % 10 === 0) {
+      sheet.getRange(i + 2, 1, 1, 8).setBackground("#e8f5e9").setFontWeight("bold");
+    }
+  }
+
+  // Summary section
+  var summaryRow = data.length + 3;
+  sheet.getRange(summaryRow, 1).setValue("SUMMARY").setFontWeight("bold").setFontSize(12);
+  sheet.getRange(summaryRow + 1, 1).setValue("Curve Type");
+  sheet.getRange(summaryRow + 1, 2).setValue("${curveType}");
+  sheet.getRange(summaryRow + 2, 1).setValue("XP Per Match");
+  sheet.getRange(summaryRow + 2, 2).setValue(${xpPerMatch});
+  sheet.getRange(summaryRow + 3, 1).setValue("Matches Per Day");
+  sheet.getRange(summaryRow + 3, 2).setValue(${matchesPerDay});
+  sheet.getRange(summaryRow + 4, 1).setValue("Max Level");
+  sheet.getRange(summaryRow + 4, 2).setValue(${data.length});
+  sheet.getRange(summaryRow + 5, 1).setValue("Total XP to Max");
+  sheet.getRange(summaryRow + 5, 2).setValue(${data[data.length - 1][4]}).setNumberFormat("#,##0");
+  sheet.getRange(summaryRow + 6, 1).setValue("Total Days to Max");
+  sheet.getRange(summaryRow + 6, 2).setValue(${cumulativeDays}).setNumberFormat("#,##0");
+
+  // Chart
+  var chart = sheet.newChart()
+    .setChartType(Charts.ChartType.LINE)
+    .addRange(sheet.getRange(1, 1, data.length + 1, 1))
+    .addRange(sheet.getRange(1, 5, data.length + 1, 1))
+    .setPosition(summaryRow + 8, 1, 0, 0)
+    .setOption("title", "XP Progression Curve")
+    .setOption("width", 800)
+    .setOption("height", 400)
+    .build();
+  sheet.insertChart(chart);
+
+  SpreadsheetApp.getUi().alert("XP Progression sheet created successfully!");
+}`;
+
+            document.getElementById('sheetsAppsScript').value = script;
+            showAlert('Apps Script generated', 'success');
+        }
+
+        function copyAppsScript() {
+            const script = document.getElementById('sheetsAppsScript');
+            if (!script.value) {
+                generateAppsScript();
+            }
+            navigator.clipboard.writeText(script.value);
+            showAlert('Apps Script copied — paste into Extensions > Apps Script', 'success');
+        }
+
         // === TAB SWITCHING ===
         function switchTab(tabName) {
             document.querySelectorAll('.tab-content').forEach(content => {
@@ -1989,12 +1976,11 @@
             
             if (tabName === 'charts') {
                 updateCharts();
-            } else if (tabName === 'analysis') {
-                displayGrindWallAnalysis();
-                displayPercentiles();
-                updateVelocityChart();
             } else if (tabName === 'benchmarks') {
                 displayBenchmarks();
+            } else if (tabName === 'sheets') {
+                generateSheetData();
+                generateAppsScript();
             }
         }
 
@@ -2005,7 +1991,7 @@
             updateComparison();
             
             const activeTab = document.querySelector('.tab-content.active');
-            if (activeTab && (activeTab.id === 'charts' || activeTab.id === 'analysis')) {
+            if (activeTab && activeTab.id === 'charts') {
                 updateCharts();
             }
         }
