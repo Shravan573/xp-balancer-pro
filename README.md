@@ -35,8 +35,8 @@ Pre-built progression curves modeled after popular games:
 Click any benchmark to load its curve and parameters instantly.
 
 ### Google Sheets Export
-- **Tab-separated data** — copy and paste directly into Google Sheets
-- **Auto-generated Apps Script** — paste into Extensions > Apps Script to create a fully formatted sheet with:
+- **Tab-separated data** : copy and paste directly into Google Sheets
+- **Auto-generated Apps Script** : paste into Extensions > Apps Script to create a fully formatted sheet with:
   - Headers, row banding, and frozen rows
   - Number formatting and auto-resized columns
   - Milestone highlighting (every 10 levels)
@@ -44,8 +44,8 @@ Click any benchmark to load its curve and parameters instantly.
   - Embedded XP progression chart
 
 ### Charts
-- **XP Progression Curve** — dual-axis chart showing Total XP and XP per Level
-- **All Curves Comparison** — overlay of all 5 curve types
+- **XP Progression Curve** : dual-axis chart showing Total XP and XP per Level
+- **All Curves Comparison** : overlay of all 5 curve types
 
 ### Additional Tools
 - **Light/Dark theme** toggle
@@ -79,9 +79,9 @@ Use **Export > Share URL** to generate a link that encodes your current settings
 
 ## Tech Stack
 
-- **HTML/CSS/JS** — single-file, no dependencies beyond Chart.js
-- **Chart.js** (CDN) — for all data visualizations
-- **localStorage** — for persisting saved presets
+- **HTML/CSS/JS** : single-file, no dependencies beyond Chart.js
+- **Chart.js** (CDN) : for all data visualizations
+- **localStorage** : for persisting saved presets
 
 ## Author
 
