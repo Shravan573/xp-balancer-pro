@@ -12,7 +12,7 @@ Professional game progression design tool for balancing XP curves, comparing pro
 ### 5 Progression Curves
 | Curve | Description | Parameters |
 |-------|-------------|------------|
-| **Current** | Your hardcoded XP data (50 levels default) | — |
+| **Current** | Your hardcoded XP data (50 levels default) | - |
 | **Exponential** | Multiplier-based scaling | Multiplier (default 1.15) |
 | **Linear** | Flat XP increase per level | XP Increase (default 1000) |
 | **Steep Early** | Power curve, steep at low levels | Base XP, Exponent |
@@ -52,7 +52,7 @@ Click any benchmark to load its curve and parameters instantly.
 - **Undo/Redo** history (up to 50 states)
 - **Import** data from CSV or JSON
 - **Export** to CSV, JSON, or shareable URL (base64-encoded)
-- **Presets** — save and load named curve configurations (localStorage)
+- **Presets** : save and load named curve configurations (localStorage)
 - **Copy** individual row data to clipboard
 - **Print** support with clean layout
 
